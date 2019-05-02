@@ -1,0 +1,8 @@
+A_CNN_Model/archive/
+A_CNN_Model/layer_output/
+A_CNN_Model/layer_output_temp/
+A_CNN_Model/params/
+A_CNN_Model/params_temp/
+A_CNN_Model/A_CNN_Model.zip
+A_CNN_Model/bvlc_alexnet.npy
+A_CNN_Model/fall11_urls.txt
