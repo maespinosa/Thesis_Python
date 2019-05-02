@@ -2,7 +2,7 @@ fclose('all');
 clear all; 
 close all; 
 
-W1_file = fopen('.\W1_tensorflow.bin');
+W1_file = fopen('.\W1.bin');
 % W2_file = fopen('.\W2_tensorflow.bin');
 % W3_file = fopen('.\W3_tensorflow.bin');
 % W4_file = fopen('.\W4_tensorflow.bin');
@@ -19,15 +19,15 @@ num_channels = 3;
 height = 11; 
 width = 11; 
 
-W1_read = fread(W1_file,[num_filters*num_channels*height*width,1],'single');
+W1_read = fread(W1_file,[num_filters*num_channels*height*width,1],'double');
 W1 = zeros(height,width,num_channels,num_filters);
 
 index = 1; 
 
-for HH = 1:1:height 
-    for WW = 1:1:width
-        for channels = 1:1:num_channels
-            for filters = 1:1:num_filters
+for filters = 1:1:num_filters 
+    for channels = 1:1:num_channels
+        for HH = 1:1:width%filters = 1:1:num_filters %channels = 1:1:num_channels
+            for WW = 1:1:width%channels = 1:1:num_channels
                 W1(HH,WW,channels,filters) = W1_read(index,1); 
                 index = index + 1; 
             end

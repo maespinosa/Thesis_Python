@@ -2,7 +2,7 @@ fclose('all');
 clear all; 
 close all; 
 
-W1_file = fopen('.\params\W1_tensorflow.bin');
+W1_file = fopen('.\W1.bin');
 
 %% Convert W1 Data
 disp('Converting W1 data')
@@ -13,7 +13,7 @@ num_channels = 3;
 height = 11; 
 width = 11; 
 
-W1_read_single = fread(W1_file,[num_filters*num_channels*height*width,1],'single');
+W1_read_single = fread(W1_file,[num_filters*num_channels*height*width,1],'double');
 W1_single = zeros(height,width,num_channels,num_filters);
 
 Hex_W1_read_single = []; 
@@ -23,10 +23,56 @@ end
 
 index = 1; 
 
-for HH = 1:1:height 
-    for WW = 1:1:width
-        for channels = 1:1:num_channels
-            for filters = 1:1:num_filters
+% for HH = 1:1:height 
+%     for WW = 1:1:width
+%         for channels = 1:1:num_channels
+%             for filters = 1:1:num_filters
+%                 W1_single(HH,WW,channels,filters) = W1_read_single(index,1); 
+%                 index = index + 1; 
+%             end
+%         end 
+%     end 
+% end 
+
+% for HH = 1:1:height 
+%     for WW = 1:1:width
+%         for filters = 1:1:num_filters %channels = 1:1:num_channels
+%             for channels = 1:1:num_channels
+%                 W1_single(HH,WW,channels,filters) = W1_read_single(index,1); 
+%                 index = index + 1; 
+%             end
+%         end 
+%     end 
+% end 
+
+
+% for WW = 1:1:width
+%     for HH = 1:1:width%WW = 1:1:width
+%         for channels = 1:1:num_channels
+%             for filters = 1:1:num_filters
+%                 W1_single(HH,WW,channels,filters) = W1_read_single(index,1); 
+%                 index = index + 1; 
+%             end
+%         end 
+%     end 
+% end 
+
+
+% for WW = 1:1:width
+%     for HH = 1:1:width%WW = 1:1:width
+%         for filters = 1:1:num_filters %channels = 1:1:num_channels
+%             for channels = 1:1:num_channels
+%                 W1_single(HH,WW,channels,filters) = W1_read_single(index,1); 
+%                 index = index + 1; 
+%             end
+%         end 
+%     end 
+% end 
+
+for filters = 1:1:num_filters 
+    for channels = 1:1:num_channels
+        for HH = 1:1:width%filters = 1:1:num_filters %channels = 1:1:num_channels
+            for WW = 1:1:width%channels = 1:1:num_channels
                 W1_single(HH,WW,channels,filters) = W1_read_single(index,1); 
                 index = index + 1; 
             end
@@ -34,12 +80,24 @@ for HH = 1:1:height
     end 
 end 
 
+% for filters = 1:1:num_filters 
+%     for channels = 1:1:num_channels
+%         for WW = 1:1:width%HH = 1:1:width%filters = 1:1:num_filters %channels = 1:1:num_channels
+%             for HH = 1:1:width%WW = 1:1:width%channels = 1:1:num_channels
+%                 W1_single(HH,WW,channels,filters) = W1_read_single(index,1); 
+%                 index = index + 1; 
+%             end
+%         end 
+%     end 
+% end 
+
+
 fclose('all');
 
 
 First_kernel = single(W1_single(1:11,1:11,1,1));
-First_kernel = fliplr(First_kernel); 
-First_kernel = flip(First_kernel); 
+%First_kernel = fliplr(First_kernel); 
+%First_kernel = flip(First_kernel); 
 First_kernel_permute = permute(First_kernel,[2,1]); 
 First_kernel_reshape = reshape(First_kernel_permute,[11*11,1]); 
 Hex_First_kernel = []; 
@@ -53,8 +111,8 @@ end
 
 
 Second_kernel = single(W1_single(1:11,1:11,2,1));
-Second_kernel = fliplr(Second_kernel); 
-Second_kernel = flip(Second_kernel); 
+%Second_kernel = fliplr(Second_kernel); 
+%Second_kernel = flip(Second_kernel); 
 Second_kernel_permute = permute(Second_kernel,[2,1]); 
 Second_kernel_reshape = reshape(Second_kernel_permute,[11*11,1]); 
 Hex_Second_kernel = []; 
@@ -68,8 +126,8 @@ end
 
 
 Third_kernel = single(W1_single(1:11,1:11,3,1));
-Third_kernel = fliplr(Third_kernel); 
-Third_kernel = flip(Third_kernel); 
+%%Third_kernel = fliplr(Third_kernel); 
+%Third_kernel = flip(Third_kernel); 
 Third_kernel_permute = permute(Third_kernel,[2,1]); 
 Third_kernel_reshape = reshape(Third_kernel_permute,[11*11,1]); 
 Hex_Third_kernel = []; 
@@ -86,7 +144,7 @@ end
 
 
 
-image_data = imread('./input_data/n04592741_2399_scaled.jpg'); 
+image_data = imread('./input_image.jpg'); 
 [H,W,C]= size(image_data); 
 
 imshow(image_data)

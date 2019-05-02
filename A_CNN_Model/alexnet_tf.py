@@ -10,6 +10,9 @@ sys.path.append('C:/Users/Marks-M3800/Documents/A2/assignment2')
 from tf_layers import *
 sys.path.append('C:/Anaconda3/envs')
 import tensorflow as tf
+import os
+import struct
+
 
 class AlexNet_TF(object):
 	def __init__(self): 
@@ -43,6 +46,7 @@ class AlexNet_TF(object):
 		x_reshape = tf.reshape(X,(X.shape[0],tf.reduce_prod(X.shape[1:])))
 		print('x_reshape shape = ', x_reshape.shape)
 
+
 		out = tf.tensordot(tf.transpose(W), tf.transpose(x_reshape), axes=((1),(0))) 
 
 		print('out shape = ', out.shape)
@@ -56,15 +60,265 @@ class AlexNet_TF(object):
 		out = tf.add(out,b)
 		return out
 
-	def loss(self,X, y=None, input_dim = (1, 3, 227, 227), hidden_dim = 4096, num_classes = 1000, reg=0.0, weight_scale = 1e-3):
+	def get_saved_parameters(self, hidden_dim = 4096, num_classes = 10): 
+
+		self.params = {}
+		## W1 Init ---------------------------------------------------
+		
+		file_exists = os.path.isfile('./params_temp/W1.bin')
+		file_size = os.path.getsize('./params_temp/W1.bin')
+
+		data = np.zeros([int(file_size/8)])
+		if file_exists:
+		    print('W1.bin FOUND!!')
+		    file = open('./params_temp/W1.bin','rb')
+		    for i in range(int(file_size/8)):
+		        data[i] = struct.unpack('d', file.read(8))[0]
+		    file.close()
+
+		    data = np.reshape(data, [96,3,11,11])
+		    self.params['W1'] = np.transpose(data, [2,3,1,0])
+
+		
+		## b1 Init ---------------------------------------------------
+		file_exists = os.path.isfile('./params_temp/b1.bin')
+		file_size = os.path.getsize('./params_temp/b1.bin')
+
+		data = np.zeros([int(file_size/8)])
+		if file_exists:
+		    print('b1.bin FOUND!!')
+		    file = open('./params_temp/b1.bin','rb')
+		    for i in range(int(file_size/8)):
+		        data[i] = struct.unpack('d', file.read(8))[0]
+		    file.close()
+
+		    self.params['b1'] = np.reshape(data, [96])
+
+
+		## W2 Init ---------------------------------------------------
+		file_exists = os.path.isfile('./params_temp/W2.bin')
+		file_size = os.path.getsize('./params_temp/W2.bin')
+
+		data = np.zeros([int(file_size/8)])
+		if file_exists:
+		    print('W2.bin FOUND!!')
+		    file = open('./params_temp/W2.bin','rb')
+		    for i in range(int(file_size/8)):
+		        data[i] = struct.unpack('d', file.read(8))[0]
+		    file.close()
+
+		    self.params['W2'] = np.reshape(data, [256,96,5,5])
+
+
+		## b2 Init ---------------------------------------------------			
+		file_exists = os.path.isfile('./params_temp/b2.bin')
+		file_size = os.path.getsize('./params_temp/b2.bin')
+
+		data = np.zeros([int(file_size/8)])
+		if file_exists:
+		    print('b2.bin FOUND!!')
+		    file = open('./params_temp/b2.bin','rb')
+		    for i in range(int(file_size/8)):
+		        data[i] = struct.unpack('d', file.read(8))[0]
+		    file.close()
+
+		    self.params['b2'] = np.reshape(data, [256])
+			
+		## W3 Init ---------------------------------------------------
+		file_exists = os.path.isfile('./params_temp/W3.bin')
+		file_size = os.path.getsize('./params_temp/W3.bin')
+
+		data = np.zeros([int(file_size/8)])
+		if file_exists:
+		    print('W3.bin FOUND!!')
+		    file = open('./params_temp/W3.bin','rb')
+		    for i in range(int(file_size/8)):
+		        data[i] = struct.unpack('d', file.read(8))[0]
+		    file.close()
+
+		    self.params['W3'] = np.reshape(data, [384,256,3,3])
+		
+		
+		## b3 Init ---------------------------------------------------
+		file_exists = os.path.isfile('./params_temp/b3.bin')
+		file_size = os.path.getsize('./params_temp/b3.bin')
+
+		data = np.zeros([int(file_size/8)])
+		if file_exists:
+		    print('b3.bin FOUND!!')
+		    file = open('./params_temp/b3.bin','rb')
+		    for i in range(int(file_size/8)):
+		        data[i] = struct.unpack('d', file.read(8))[0]
+		    file.close()
+
+		    self.params['b3'] = np.reshape(data, [384])
+			
+			
+		## W4 Init ---------------------------------------------------
+		file_exists = os.path.isfile('./params_temp/W4.bin')
+		file_size = os.path.getsize('./params_temp/W4.bin')
+
+		data = np.zeros([int(file_size/8)])
+		if file_exists:
+		    print('W4.bin FOUND!!')
+		    file = open('./params_temp/W4.bin','rb')
+		    for i in range(int(file_size/8)):
+		        data[i] = struct.unpack('d', file.read(8))[0]
+		    file.close()
+
+		    self.params['W4'] = np.reshape(data, [384,384,3,3])
+		
+		
+		
+		## b4 Init ---------------------------------------------------
+		file_exists = os.path.isfile('./params_temp/b4.bin')
+		file_size = os.path.getsize('./params_temp/b4.bin')
+
+		data = np.zeros([int(file_size/8)])
+		if file_exists:
+		    print('b4.bin FOUND!!')
+		    file = open('./params_temp/b4.bin','rb')
+		    for i in range(int(file_size/8)):
+		        data[i] = struct.unpack('d', file.read(8))[0]
+		    file.close()
+
+		    self.params['b4'] = np.reshape(data, [384])
+			
+			
+			
+		## W5 Init ---------------------------------------------------
+		file_exists = os.path.isfile('./params_temp/W5.bin')
+		file_size = os.path.getsize('./params_temp/W5.bin')
+
+		data = np.zeros([int(file_size/8)])
+		if file_exists:
+		    print('W5.bin FOUND!!')
+		    file = open('./params_temp/W5.bin','rb')
+		    for i in range(int(file_size/8)):
+		        data[i] = struct.unpack('d', file.read(8))[0]
+		    file.close()
+
+		    self.params['W5'] = np.reshape(data, [256,384,3,3])
+		
+
+		
+		## b5 Init ---------------------------------------------------
+		file_exists = os.path.isfile('./params_temp/b5.bin')
+		file_size = os.path.getsize('./params_temp/b5.bin')
+
+		data = np.zeros([int(file_size/8)])
+		if file_exists:
+		    print('b5.bin FOUND!!')
+		    file = open('./params_temp/b5.bin','rb')
+		    for i in range(int(file_size/8)):
+		        data[i] = struct.unpack('d', file.read(8))[0]
+		    file.close()
+
+		    self.params['b5'] = np.reshape(data, [256])
+			
+			
+		## W6 Init ---------------------------------------------------
+		file_exists = os.path.isfile('./params_temp/W6.bin')
+		file_size = os.path.getsize('./params_temp/W6.bin')
+
+		data = np.zeros([int(file_size/8)])
+		if file_exists:
+		    print('W6.bin FOUND!!')
+		    file = open('./params_temp/W6.bin','rb')
+		    for i in range(int(file_size/8)):
+		        data[i] = struct.unpack('d', file.read(8))[0]
+		    file.close()
+
+		    self.params['W6'] = np.reshape(data, [256*6*6,hidden_dim])
+		
+		
+		## b6 Init ---------------------------------------------------
+		file_exists = os.path.isfile('./params_temp/b6.bin')
+		file_size = os.path.getsize('./params_temp/b6.bin')
+
+		data = np.zeros([int(file_size/8)])
+		if file_exists:
+		    print('b6.bin FOUND!!')
+		    file = open('./params_temp/b6.bin','rb')
+		    for i in range(int(file_size/8)):
+		        data[i] = struct.unpack('d', file.read(8))[0]
+		    file.close()
+
+		    self.params['b6'] = np.reshape(data, [hidden_dim])
+			
+			
+		## W7 Init ---------------------------------------------------
+		file_exists = os.path.isfile('./params_temp/W7.bin')
+		file_size = os.path.getsize('./params_temp/W7.bin')
+
+		data = np.zeros([int(file_size/8)])
+		if file_exists:
+		    print('W7.bin FOUND!!')
+		    file = open('./params_temp/W7.bin','rb')
+		    for i in range(int(file_size/8)):
+		        data[i] = struct.unpack('d', file.read(8))[0]
+		    file.close()
+
+		    self.params['W7'] = np.reshape(data, [hidden_dim,hidden_dim])
+		
+		## b7 Init ---------------------------------------------------
+		file_exists = os.path.isfile('./params_temp/b7.bin')
+		file_size = os.path.getsize('./params_temp/b7.bin')
+
+		data = np.zeros([int(file_size/8)])
+		if file_exists:
+		    print('b7.bin FOUND!!')
+		    file = open('./params_temp/b7.bin','rb')
+		    for i in range(int(file_size/8)):
+		        data[i] = struct.unpack('d', file.read(8))[0]
+		    file.close()
+
+		    self.params['b7'] = np.reshape(data, [hidden_dim])
+			
+			
+		## W8 Init ---------------------------------------------------
+		file_exists = os.path.isfile('./params_temp/W8.bin')
+		file_size = os.path.getsize('./params_temp/W8.bin')
+
+		data = np.zeros([int(file_size/8)])
+		if file_exists:
+		    print('W8.bin FOUND!!')
+		    file = open('./params_temp/W8.bin','rb')
+		    for i in range(int(file_size/8)):
+		        data[i] = struct.unpack('d', file.read(8))[0]
+		    file.close()
+
+		    self.params['W8'] = np.reshape(data, [hidden_dim,num_classes])
+		
+		
+		## b8 Init ---------------------------------------------------
+		file_exists = os.path.isfile('./params_temp/b8.bin')
+		file_size = os.path.getsize('./params_temp/b8.bin')
+
+		data = np.zeros([int(file_size/8)])
+		if file_exists:
+		    print('b8.bin FOUND!!')
+		    file = open('./params_temp/b8.bin','rb')
+		    for i in range(int(file_size/8)):
+		        data[i] = struct.unpack('d', file.read(8))[0]
+		    file.close()
+
+		    self.params['b8'] = np.reshape(data, [num_classes])
+			
 
 
 
-		conv1_param = {'stride': 4.0, 'pad': 0.0}
-		conv2_param = {'stride': 1.0, 'pad': 2.0}
-		conv3_param = {'stride': 1.0, 'pad': 1.0}
-		conv4_param = {'stride': 1.0, 'pad': 1.0}
-		conv5_param = {'stride': 1.0, 'pad': 1.0}				
+	def loss(self,X, y=None, input_dim = (1, 3, 227, 227), hidden_dim = 4096, num_classes = 1000, reg=0.0, weight_scale = 1e-3, get_saved_params = 0):
+
+		if(get_saved_params == 1): 
+			self.get_saved_parameters(hidden_dim = hidden_dim, num_classes = num_classes)
+
+
+		conv1_param = {'stride': 4, 'pad': 0}
+		conv2_param = {'stride': 1, 'pad': 2}
+		conv3_param = {'stride': 1, 'pad': 1}
+		conv4_param = {'stride': 1, 'pad': 1}
+		conv5_param = {'stride': 1, 'pad': 1}				
 
 		# pass pool_param to the forward pass for the max-pooling layer
 		pool_param = {'pool_height': 3, 'pool_width': 3, 'stride': 2}
@@ -76,14 +330,31 @@ class AlexNet_TF(object):
 		# print('X shape = ', X.shape)
 		# print('W1 shape = ', W1.shape)
 
+		X1 = tf.subtract(X,tf.reduce_mean(X,axis=0))
+		X2 = tf.math.reduce_std(X1,axis=0)
+		X3 = tf.divide(X1,X2)
+
 
 		with tf.variable_scope("CONV1"):
 			#print('>>> CONV1')
-			W1 = tf.Variable(tf.random_normal((11,11,3,96), mean=0, stddev=weight_scale))
+			file_exists = os.path.isfile('./params/W1.ckpt.data-00000-of-00001')
+			file_size = os.path.getsize('./params/W1.ckpt.data-00000-of-00001')
+
+			if(get_saved_params == 1 & file_exists == 1): 
+				#W1 = tf.get_variable("W1", [11,11,3,96], initializer = tf.zeros_initializer)
+				#saver = tf.train.Saver({"W1": W1})
+				#W1.initializer.run()
+				#saver.restore(sess, './params/W1.ckpt.data-00000-of-00001')
+				W1 = tf.convert_to_tensor(self.params['W1'], dtype=tf.float32)
+				pass
+			else: 
+				W1 = tf.Variable(tf.random_normal((11,11,3,96), mean=0, stddev=weight_scale))
+
+
 			b1 = tf.Variable(tf.zeros(96))
 			conv1 = tf.Variable(tf.random_normal((input_dim[0],96,55,55), mean=0, stddev=weight_scale))
 
-			conv1_out = tf.assign(conv1,tf.nn.conv2d(input=X,filter=W1,strides=[1,1, conv1_param['stride'], conv1_param['stride']],padding='VALID',data_format="NCHW"))
+			conv1_out = tf.assign(conv1,tf.nn.conv2d(input=X3,filter=W1,strides=[1,1, conv1_param['stride'], conv1_param['stride']],padding='VALID',data_format="NCHW"))
 			#conv1_out = tf.assign(conv1,conv_forward_naive(x=X,w=W1,b=b1,conv_param=conv1_param))
 			#conv1_out = tf.assign(conv1,AlexNet_TF.conv(input=X, kernel=W1, biases=b1, k_h=11, k_w=11, c_o=96, s_h=4, s_w=4,  padding="VALID", group=1))
 
@@ -205,16 +476,16 @@ class AlexNet_TF(object):
 			W6 = tf.Variable(tf.random_normal((256*6*6,hidden_dim), mean=0, stddev=weight_scale))
 			b6 = tf.Variable(tf.zeros(hidden_dim,1))
 			affine1 = tf.Variable(tf.zeros((hidden_dim,input_dim[0]))) 
-			affine1_out = tf.assign(affine1,AlexNet_TF.affine_forward_tf(maxpool3, W6, b6))
-			print('AFFINE1 OUT shape =', affine1_out.shape)
+			#affine1_out = tf.assign(affine1,AlexNet_TF.affine_forward_tf(maxpool3, W6, b6))
+			#print('AFFINE1 OUT shape =', affine1_out.shape)
 
 		with tf.variable_scope("FC7"):
 			#print('>>> Affine2')
 			W7 = tf.Variable(tf.random_normal((hidden_dim,hidden_dim), mean=0, stddev=weight_scale))
 			b7 = tf.Variable(tf.zeros(hidden_dim,1))
 			affine2 = tf.Variable(tf.zeros((hidden_dim,input_dim[0]))) 
-			affine2_out = tf.assign(affine2,AlexNet_TF.affine_forward_tf(tf.transpose(affine1), W7, b7))
-			print('AFFINE2 OUT shape =', affine2_out.shape)
+			#affine2_out = tf.assign(affine2,AlexNet_TF.affine_forward_tf(tf.transpose(affine1), W7, b7))
+			#print('AFFINE2 OUT shape =', affine2_out.shape)
 
 		with tf.variable_scope("FC8"):
 			#print('>>> Affine3')
@@ -222,8 +493,8 @@ class AlexNet_TF(object):
 			b8 = tf.Variable(tf.zeros(num_classes,1))
 			affine3 = tf.Variable(tf.zeros((num_classes,input_dim[0]))) 
 			scores = tf.Variable(tf.zeros((num_classes,hidden_dim)))
-			affine3_out = tf.assign(affine3,AlexNet_TF.affine_forward_tf(tf.transpose(affine2), W8, b8))
-			print('AFFINE3 OUT shape =', affine3_out.shape)
+			#affine3_out = tf.assign(affine3,AlexNet_TF.affine_forward_tf(tf.transpose(affine2), W8, b8))
+			#print('AFFINE3 OUT shape =', affine3_out.shape)
 			#print('>>> Scores')
 			scores = affine3
 
@@ -249,7 +520,7 @@ class AlexNet_TF(object):
 
 		#print("SOFTMAX ==================")
 		#print('Y = ', y)
-		print('Y shape = ', y.shape)
+		#print('Y shape = ', y.shape)
 		softmax_input_trans = tf.transpose(scores)
 		print('softmax input trans shape = ', softmax_input_trans.shape)
 		exp_scores = tf.exp(softmax_input_trans)
@@ -312,18 +583,21 @@ class AlexNet_TF(object):
 
 		# print('loss = ', loss)
 
-		print('y shape = ', y.shape)
-		print('y = ', y)
-		loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels= y[:,0], logits=tf.transpose(affine3))
+		if(y != None):
 
-		print("Loss ", loss.shape)
-		#outputs = [conv1_out,conv2_out,conv3_out,conv4_out,conv5_out]
+			print('y shape = ', y.shape)
+			print('y = ', y)
+			loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels= y[:,0], logits=tf.transpose(affine3))
 
-		dscores = tf.add(P, -1.0)
+			print("Loss ", loss.shape)
+			#outputs = [conv1_out,conv2_out,conv3_out,conv4_out,conv5_out]
 
-		dscores = tf.divide(dscores,tf.cast(input_dim[0], tf.float32))
-		print('dscores')
+			dscores = tf.add(P, -1.0)
 
+			dscores = tf.divide(dscores,tf.cast(input_dim[0], tf.float32))
+			print('dscores')
+		else:
+			loss = 0
 
 
 		# #with tf.variable_scope("BACK_FC8"):

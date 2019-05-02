@@ -375,20 +375,20 @@ def conv_forward_naive(x, w, b, conv_param):
   #print('b = ', b)
   
   #DISPLAY THE CRITICAL DIMENSIONS 
-  pad = tf.cast(conv_param['pad'],tf.float32,name='pad')
+  pad = tf.cast(conv_param['pad'],tf.int32,name='pad')
   #pad = conv_param['pad']
   print('pad = ', pad)
   
-  stride = tf.cast(conv_param['stride'],tf.float32,name='stride')
+  stride = tf.cast(conv_param['stride'],tf.int32,name='stride')
   #stride = conv_param['stride']
   print('stride = ', stride)
   
   # Input Volume Dimensions
   N,C,H,W = x.get_shape()
-  N = tf.cast(N,tf.float32,name='N')
-  C = tf.cast(C,tf.float32,name='C')
-  H = tf.cast(H,tf.float32,name='H')
-  W = tf.cast(W,tf.float32,name='W')
+  N = tf.cast(N,tf.int32,name='N')
+  C = tf.cast(C,tf.int32,name='C')
+  H = tf.cast(H,tf.int32,name='H')
+  W = tf.cast(W,tf.int32,name='W')
   print('N = ', N)
   print('C = ', C)
   print('H = ', H)
@@ -396,46 +396,46 @@ def conv_forward_naive(x, w, b, conv_param):
   
   #Filter Dimensions
   F,_,HH,WW = w.get_shape()
-  F = tf.cast(F,tf.float32,name='F')
-  HH = tf.cast(HH,tf.float32,name='HH')
-  WW = tf.cast(WW,tf.float32,name='WW')
+  F = tf.cast(F,tf.int32,name='F')
+  HH = tf.cast(HH,tf.int32,name='HH')
+  WW = tf.cast(WW,tf.int32,name='WW')
   print('F = ', F)
   print('HH = ', HH)
   print('WW = ', WW)
   
   #Output Volume Dimensions
-  OH = 1.0 + (((H) + (2.0*(pad)) - (HH))/(stride))
-  tf.Print(OH,[OH])
+  OH = tf.cast(1 + (((H) + (2*(pad)) - (HH))/(stride)),tf.int32)
+  tf.print(OH,[OH])
   print('OH =',OH)
   
-  OW = 1.0 + (((W) + (2.0*(pad)) - (WW))/(stride))
-  tf.Print(OW,[OW]) 
+  OW = tf.cast(1 + (((W) + (2*(pad)) - (WW))/(stride)),tf.int32)
+  tf.print(OW,[OW]) 
   print('OW =',OW)
   
   #TAKE BLOCKS OF INPUT VOLUME AND RESHAPE
-  X_col = tf.Variable(tf.zeros((OH*OW,C*HH*WW)))
+  X_col = tf.zeros((OH*OW,C*HH*WW))
   #X_col = tf.zeros([tf.identity(OH,[OH])*tf.identity(OW,[OW]),tf.identity(C,[C])*tf.identity(HH,[HH])*tf.identity(WW,[WW])])
   #print('X_col shape  = ', X_col.shape)
   
-  w_row = tf.zeros([tf.identity(F,[F]),tf.identity(HH,[HH])*tf.identity(WW,[WW])*tf.identity(C,[C])])	
+  w_row = tf.zeros([F,HH*WW*C])	
 
-  x_pad = np.zeros([1,(int(H)+(pad*2))*(int(W)+(pad*2))*int(C)])
-  x_pad = np.reshape(x_pad, [C,(int(H)+(pad*2)), (int(W)+(pad*2))])
+  x_pad = tf.zeros([1,(H+(pad*2))*(W+(pad*2))*C])
+  x_pad = tf.reshape(x_pad, [C,(H+(pad*2)), (W+(pad*2))])
 
 
   #print('x_pad = ', x_pad)
   #print('x_pad shape = ', x_pad.shape)
   
-  out = np.zeros([N,F,int(OH),int(OW)])
+  out = tf.zeros([N,F,OH,OW])
   
-  filter_w = np.zeros([HH, WW])
+  filter_w = tf.zeros([HH, WW])
   #print('w = ', w)
-  for ii in range(F): 
+  for ii in range(F.eval()): 
 	    for iii in range(C): 
 	        filter_w = w[ii,iii,:,:]
 	        #print('filter_w = ', filter_w)
 	        #print('filter_w shape = ', filter_w.shape)
-	        filter_w = np.reshape(filter_w, [1,HH*WW])
+	        filter_w = tf.reshape(filter_w, [1,HH*WW])
 	        #print('filter_w = ', filter_w)
 	        w_row[ii,(iii*HH*WW):(iii*HH*WW)+HH*WW] = filter_w
 

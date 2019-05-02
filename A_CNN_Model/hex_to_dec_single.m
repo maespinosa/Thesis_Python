@@ -1,6 +1,11 @@
 function dec_value = hex_to_dec_single(x)
-
-bin_value = hexToBinaryVector(x); 
+x; 
+size(x);
+if(x == '00000000')
+    bin_value = zeros(1,32);
+else 
+    bin_value = hexToBinaryVector(x);
+end 
 bit_counter = 0; 
 
 if(length(bin_value) < 32)
@@ -29,6 +34,7 @@ dec_part_a = 2^(sum_exponent-127);
 calc_value_2 = []; 
 
 for i = 10:1:32
+    i;
     calc_value_2 = [calc_value_2,bin_value(i)*(2^(-1*(i-9)))]; 
 end 
 

@@ -2,7 +2,7 @@ fclose('all');
 clear all; 
 close all; 
 
-image_data = imread('n02865351_9152_scaled.jpg'); 
+image_data = imread('input_image.jpg'); 
 [H,W,C]= size(image_data); 
 
 imshow(image_data)

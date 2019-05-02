@@ -1,0 +1,10 @@
+n04548362	wallet, billfold, notecase, pocketbook
+n03642806	laptop, laptop computer
+n03063599	coffee mug
+n02690373	airliner
+n03930630	pickup, pickup truck
+n01614925	bald eagle, American eagle, Haliaeetus leucocephalus
+n03085013	computer keyboard, keypad
+n02708093	analog clock
+n03272010	electric guitar
+n02992529	cellular telephone, cellular phone, cellphone, cell, mobile phone

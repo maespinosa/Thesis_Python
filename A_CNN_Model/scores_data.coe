@@ -1,0 +1,27 @@
+; Sample memory initialization file for Single Port Block Memory, 
+; v3.0 or later.
+;
+; This .COE file specifies initialization values for a block 
+; memory of depth=16, and width=8. In this case, values are 
+; specified in hexadecimal format.
+;
+memory_initialization_radix=16;
+memory_initialization_vector=
+3DE4,
+3E5E,
+BE85,
+BCEF,
+BE26,
+3E4A,
+3BDF,
+BD92,
+3E0E,
+BE1D; 
+
+
+
+
+ 
+
+
+
